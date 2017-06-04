@@ -1,6 +1,11 @@
 <resources>
-    <string name="app_name">MovieApp</string>
+    <string name="app_name">MyMovies</string>
     <string name="posterImage">Poster Image</string>
     <string name="endOfList">Hey!! You reached end of list.</string>
     <string name="startOfList">Hey!! You reached start of List</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="search">Search</string>
+    <string name="drawer_open">Drawer Open</string>
+    <string name="drawer_close">Drawer Close</string>
 </resources>

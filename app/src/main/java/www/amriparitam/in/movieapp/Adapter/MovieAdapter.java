@@ -1,17 +1,20 @@
 package www.amriparitam.in.movieapp.Adapter;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import amagi82.flexibleratingbar.FlexibleRatingBar;
 import www.amriparitam.in.movieapp.Model.Movie;
 import www.amriparitam.in.movieapp.R;
 
@@ -27,7 +30,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private int layout;
     private View selectedView;
 
-    private String base_url = "https://image.tmdb.org/t/p/w185";
+    private String base_url = "https://image.tmdb.org/t/p/w500";
 
 
     public MovieAdapter(Context context, List<Movie> movieList, MovieItemListener movieItemListener, int layout) {
@@ -61,8 +64,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
         TextView releaseDate;
+        TextView title;
         TextView rating;
         ImageView poster_image;
 
@@ -79,10 +82,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             if(itemView.isSelected()) {
                 selectedView = itemView;
             }
-            title.setText(movie.getTitle());
-            releaseDate.setText(movie.getReleaseDate());
-            rating.setText(Double.toString(movie.getVoteAverage()));
-            Glide.with(context).load(base_url+movie.getPosterPath()).into(poster_image);
+
+            Glide.with(context).load(base_url+movie.getBackdropPath()).into(poster_image);
             itemView.setTag(position);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -95,6 +96,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                     selectedView.setSelected(true);
                 }
             });
+
+            title.setText(movie.getTitle());
+            releaseDate.setText(movie.getReleaseDate());
+            rating.setText(Float.toString(movie.getVoteAverage()));
         }
     }
 }
