@@ -9,4 +9,10 @@
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>
     <string name="no_internet">Please connect to internet!!</string>
+    <string name="backDropImage">Back Drop Image</string>
+    <string name="play">Play Button</string>
+    <string name="heart">Heart Image Showing Rating</string>
+    <string name="releaseDate">Released on : %s</string>
+    <string name="rating">Rating : %.2f</string>
+    <string name="aboutMe">Hello !!!</string>
 </resources>

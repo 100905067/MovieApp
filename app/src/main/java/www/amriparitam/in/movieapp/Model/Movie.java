@@ -2,10 +2,16 @@ package www.amriparitam.in.movieapp.Model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Amrita Pritam on 4/14/2017.
@@ -116,6 +122,18 @@ public class Movie implements Parcelable {
 
     public void setVoteAverage(Float voteAverage) {
         this.voteAverage = voteAverage;
+    }
+
+    public String getReleasedDateFormat() {
+        DateFormat format = new SimpleDateFormat("yyyy-mm-dd");
+        String dateStr = null;
+        try {
+            Date date = format.parse(this.releaseDate);
+            dateStr = new SimpleDateFormat("MMMM d, yyyy").format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return dateStr;
     }
 
     protected Movie(Parcel in) {

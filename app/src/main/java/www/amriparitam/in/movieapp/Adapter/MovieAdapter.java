@@ -10,7 +10,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +121,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                 selectedView = itemView;
             }
 
-            Glide.with(context).load(base_url+movie.getBackdropPath()).into(poster_image);
+            Picasso.with(context).load(base_url+movie.getBackdropPath())
+                    .into(poster_image);
             itemView.setTag(position);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

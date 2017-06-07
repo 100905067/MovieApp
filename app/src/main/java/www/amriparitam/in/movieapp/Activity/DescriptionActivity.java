@@ -9,11 +9,15 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
+import amagi82.flexibleratingbar.FlexibleRatingBar;
 import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -32,6 +36,8 @@ public class DescriptionActivity extends AppCompatActivity {
     ImageView frontImage;
     TextView title;
     TextView overview;
+    TextView releasedDate;
+    TextView rating;
     ImageButton play_button;
 
     private MovieController controller;
@@ -48,14 +54,21 @@ public class DescriptionActivity extends AppCompatActivity {
         title = (TextView) findViewById(R.id.originalTitle);
         overview = (TextView) findViewById(R.id.overview);
         play_button = (ImageButton) findViewById(R.id.playButton);
+        releasedDate = (TextView) findViewById(R.id.releasedDate);
+        rating = (TextView) findViewById(R.id.rating);
 
         Intent intent = getIntent();
         final Movie movie = intent.getParcelableExtra("movie_detail");
 
-        Glide.with(getBaseContext()).load(base_url_front + movie.getPosterPath()).into(frontImage);
+        Picasso.with(getBaseContext()).load(base_url_front + movie.getPosterPath())
+                .into(frontImage);
         title.setText(movie.getOriginalTitle());
         overview.setText(movie.getOverview());
-        Glide.with(getBaseContext()).load(base_url + movie.getBackdropPath()).into(backImage);
+        Picasso.with(getBaseContext()).load(base_url + movie.getBackdropPath())
+                .into(backImage);
+
+        releasedDate.setText(getString(R.string.releaseDate, movie.getReleasedDateFormat()));
+        rating.setText(getString(R.string.rating, movie.getVoteAverage()));
 
         controller = MovieController.getInstance(getBaseContext());
 

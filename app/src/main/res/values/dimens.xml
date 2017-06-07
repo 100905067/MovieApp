@@ -5,6 +5,13 @@
     <dimen name="textLarge">16sp</dimen>
     <dimen name="textSmall">12sp</dimen>
     <dimen name="spaceDouble">16dp</dimen>
+    <dimen name="smallSpace">2dp</dimen>
     <dimen name="halfSpace">4dp</dimen>
     <dimen name="space">8dp</dimen>
+    <dimen name="none">0dp</dimen>
+    <dimen name="bigSpace">128dp</dimen>
+
+    <!--navigationDrawer-->
+    <dimen name="navigationDrawerWidth">220dp</dimen>
+    <dimen name="spaceTriple">24dp</dimen>
 </resources>

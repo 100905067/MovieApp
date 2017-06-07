@@ -15,10 +15,10 @@
         android:layout_height="match_parent"/>
     </RelativeLayout>
     <ListView
-        android:layout_width="220dp"
+        android:layout_width="@dimen/navigationDrawerWidth"
         android:layout_height="match_parent"
         android:id="@+id/navList"
-        android:layout_gravity="left|start"
+        android:layout_gravity="start"
         android:background="@android:color/white">
     </ListView>
 </android.support.v4.widget.DrawerLayout>

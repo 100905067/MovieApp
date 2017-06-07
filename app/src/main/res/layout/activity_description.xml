@@ -15,9 +15,10 @@
             android:id="@+id/backImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginLeft="@dimen/none"
+            android:layout_marginRight="@dimen/none"
+            android:layout_marginTop="@dimen/none"
+            android:contentDescription="@string/backDropImage"
             android:scaleType="fitCenter"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -27,8 +28,9 @@
             android:id="@+id/frontImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="128dp"
+            android:contentDescription="@string/posterImage"
+            android:layout_marginStart="@dimen/space"
+            android:layout_marginTop="@dimen/bigSpace"
             android:scaleType="centerInside"
             android:transitionName="posterImage"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -39,37 +41,60 @@
             android:layout_height="wrap_content"
             android:id="@+id/playButton"
             app:layout_constraintRight_toRightOf="@id/frontImage"
-            android:layout_marginEnd="0dp"
+            android:layout_marginEnd="@dimen/none"
             app:layout_constraintBottom_toBottomOf="@id/frontImage"
-            android:layout_marginBottom="0dp"
+            android:layout_marginBottom="@dimen/none"
             android:backgroundTint="@android:color/transparent"
-            android:src="@drawable/play"/>
+            android:src="@drawable/play"
+            android:contentDescription="@string/play" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/releasedDate"
+            app:layout_constraintLeft_toRightOf="@id/frontImage"
+            android:layout_marginStart="@dimen/spaceDouble"
+            app:layout_constraintTop_toBottomOf="@id/backImage"
+            android:layout_marginTop="@dimen/spaceDouble"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating"
+            app:layout_constraintLeft_toRightOf="@id/frontImage"
+            android:layout_marginStart="@dimen/spaceDouble"
+            app:layout_constraintTop_toBottomOf="@id/releasedDate"
+            android:layout_marginTop="@dimen/spaceDouble"
+            android:textColor="@android:color/black"/>
+
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="@dimen/smallSpace"
             android:id="@+id/divider"
             android:background="@android:color/black"
             app:layout_constraintTop_toBottomOf="@id/frontImage"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="@dimen/halfSpace"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/originalTitle"
             app:layout_constraintTop_toBottomOf="@id/divider"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="@dimen/smallSpace"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/space"
             android:textColor="@android:color/black"
             android:textStyle="bold"
-            android:textSize="16sp"/>
+            android:textSize="@dimen/textLarge"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/overview"
             app:layout_constraintTop_toBottomOf="@id/originalTitle"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="@dimen/smallSpace"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/space"
             android:textColor="@android:color/black"/>
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
