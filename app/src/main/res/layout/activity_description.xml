@@ -1,13 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_description"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_height="wrap_content"
     tools:context="www.amriparitam.in.movieapp.Activity.DescriptionActivity">
 
-</RelativeLayout>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/backImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/frontImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="128dp"
+            android:scaleType="centerInside"
+            android:transitionName="posterImage"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/backImage" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/playButton"
+            app:layout_constraintRight_toRightOf="@id/frontImage"
+            android:layout_marginEnd="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/frontImage"
+            android:layout_marginBottom="0dp"
+            android:backgroundTint="@android:color/transparent"
+            android:src="@drawable/play"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:id="@+id/divider"
+            android:background="@android:color/black"
+            app:layout_constraintTop_toBottomOf="@id/frontImage"
+            android:layout_marginTop="4dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/originalTitle"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            android:layout_marginTop="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/overview"
+            app:layout_constraintTop_toBottomOf="@id/originalTitle"
+            android:layout_marginTop="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            android:textColor="@android:color/black"/>
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

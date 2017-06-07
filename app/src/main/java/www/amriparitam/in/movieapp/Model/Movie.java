@@ -1,12 +1,17 @@
 package www.amriparitam.in.movieapp.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Comparator;
 
 /**
  * Created by Amrita Pritam on 4/14/2017.
  */
 
-public class Movie {
+public class Movie implements Parcelable {
     @SerializedName("poster_path")
     private String posterPath;
     @SerializedName("overview")
@@ -111,6 +116,63 @@ public class Movie {
 
     public void setVoteAverage(Float voteAverage) {
         this.voteAverage = voteAverage;
+    }
+
+    protected Movie(Parcel in) {
+        this.posterPath = in.readString();
+        this.overview = in.readString();
+        this.releaseDate = in.readString();
+        this.id = in.readInt();
+        this.originalTitle = in.readString();
+        this.originalLanguage = in.readString();
+        this.title = in.readString();
+        this.backdropPath = in.readString();
+        this.voteAverage = in.readFloat();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(posterPath);
+        parcel.writeString(overview);
+        parcel.writeString(releaseDate);
+        parcel.writeInt(id);
+        parcel.writeString(originalTitle);
+        parcel.writeString(originalLanguage);
+        parcel.writeString(title);
+        parcel.writeString(backdropPath);
+        parcel.writeFloat(voteAverage);
+    }
+
+    @Override
+    public String toString() {
+        return "Movie : [id :" + id
+                + "backdrop Path :" + backdropPath
+                + "]";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Movie m = (Movie) obj;
+        if(this.id == m.getId())
+            return true;
+        return false;
     }
 }
 

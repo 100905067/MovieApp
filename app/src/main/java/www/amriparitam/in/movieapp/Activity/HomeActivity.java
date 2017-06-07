@@ -1,20 +1,25 @@
 package www.amriparitam.in.movieapp.Activity;
 
-import android.os.PersistableBundle;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,6 +32,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import www.amriparitam.in.movieapp.Controller.MovieController;
 import www.amriparitam.in.movieapp.Core.BackgroundWorker;
+import www.amriparitam.in.movieapp.Core.NoConnectivityException;
 import www.amriparitam.in.movieapp.Model.Movie;
 import www.amriparitam.in.movieapp.Model.MoviesResponse;
 import www.amriparitam.in.movieapp.Adapter.MovieAdapter;
@@ -36,44 +42,36 @@ public class HomeActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private List<Movie> movieList = new ArrayList<>();
     private MovieAdapter movieAdapter;
+    private RecyclerView movieListView;
     private MovieController controller;
     private String TAG = HomeActivity.class.getSimpleName();
     private int currentPage = 1;
     private int totalPage = 0;
     private LinearLayoutManager layoutManager;
+    private BroadcastReceiver networkMonitor = null;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private String mActivityTitle;
     private ListView mDrawerList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        RecyclerView movieListView = (RecyclerView) findViewById(R.id.movieListView);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.navList);
+
+        initViews();
 
         setupDrawer();
         addDrawerItems();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        navigationView();
 
-        layoutManager = new LinearLayoutManager(this);
-        movieListView.setLayoutManager(layoutManager);
+        controller = MovieController.getInstance(getBaseContext());
 
-        mActivityTitle = getTitle().toString();
-
-        controller = MovieController.getInstance();
-
-        movieAdapter = new MovieAdapter(getBaseContext(), movieList, this, R.layout.view_cell);
-        movieListView.setAdapter(movieAdapter);
-
-        populatePopularMovies(currentPage);
-
-        /*movieListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        movieListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if(layoutManager.findLastVisibleItemPosition() == (movieList.size()-1)) {
@@ -82,15 +80,53 @@ public class HomeActivity extends AppCompatActivity implements MovieAdapter.Movi
                         return;
                     }
                     populatePopularMovies(++currentPage);
-                } else if(layoutManager.findFirstVisibleItemPosition() == 0) {
-                    if(currentPage==0) {
-                        resetAdapter();
-                        return;
-                    }
-                    populatePopularMovies(--currentPage);
                 }
             }
-        });*/
+        });
+        networkMonitor = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (isInitialStickyBroadcast()) {
+                    // Ignore this call to onReceive, as this is the sticky broadcast
+                } else {
+                    onRefresh();
+                }
+            }
+        };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "Amrita in resume method");
+        onRefresh();
+        registerReceiver(networkMonitor,new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+    }
+
+    protected void onRefresh() {
+        movieList.clear();
+        movieAdapter.notifyDataSetChanged();
+        populatePopularMovies(currentPage);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(networkMonitor);
+    }
+
+    public void initViews() {
+        movieListView = (RecyclerView) findViewById(R.id.movieListView);
+        layoutManager = new LinearLayoutManager(this);
+        movieListView.setLayoutManager(layoutManager);
+        movieAdapter = new MovieAdapter(getBaseContext(), movieList, this, R.layout.view_cell);
+        movieListView.setAdapter(movieAdapter);
+    }
+
+    public void navigationView() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        mActivityTitle = getTitle().toString();
     }
 
     private void addDrawerItems() {
@@ -137,39 +173,58 @@ public class HomeActivity extends AppCompatActivity implements MovieAdapter.Movi
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.settings_menu, menu);
+
+        MenuItem search = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        search(searchView);
         return true;
     }
 
-    /*private void resetAdapter() {
-        currentPage = 1;
-        totalPage = 0;
-        movieList.clear();
-        populatePopularMovies(currentPage);
-    }*/
+    private void search(SearchView searchView) {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                movieAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+    }
 
     private void populatePopularMovies(int pageIndex) {
+        Log.e(TAG, "Amrita :"+pageIndex);
         controller.getPopularMovies(pageIndex)
                 .subscribeOn(getScheduler())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<MoviesResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
                     }
 
                     @Override
                     public void onNext(MoviesResponse value) {
-                        movieList.clear();
-                        movieList.addAll(value.getResults());
+                        List<Movie> results = value.getResults();
+                        for(int i=0;i<results.size();i++) {
+                            Movie movie = results.get(i);
+                            if(!movieList.contains(movie)) {
+                                movieList.add(movie);
+                            }
+                        }
                         movieAdapter.notifyDataSetChanged();
                         currentPage = value.getPage();
-                        totalPage =  value.getTotalPages();
+                        totalPage = value.getTotalPages();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        Log.e(TAG, e.getLocalizedMessage());
+                        if (e instanceof NoConnectivityException) {
+                            Toast.makeText(getBaseContext(), getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -180,11 +235,18 @@ public class HomeActivity extends AppCompatActivity implements MovieAdapter.Movi
     }
 
     @Override
-    public void onItemSelected(Movie movie, int position) {
-        Toast.makeText(getBaseContext(), "Movie clicked at position :"+position, Toast.LENGTH_SHORT).show();
+    public void onItemSelected(Movie movie, int position, ImageView imageView) {
+        Intent intent = new Intent(this, DescriptionActivity.class);
+        intent.putExtra("movie_detail", movie);
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, imageView, "posterImage");
+        startActivity(intent);
+
     }
 
     public Scheduler getScheduler() {
         return BackgroundWorker.get().getScheduler();
     }
+
+
 }
